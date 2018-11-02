@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibNavigate", "LibNavigate\LibNavigate.csproj", "{D39C890E-A027-429F-820F-085636FB6996}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibNavigateTests", "LibNavigateTests\LibNavigateTests.csproj", "{C15D9F44-E665-47AF-B08C-A467D32D8072}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D39C890E-A027-429F-820F-085636FB6996}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D39C890E-A027-429F-820F-085636FB6996}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D39C890E-A027-429F-820F-085636FB6996}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D39C890E-A027-429F-820F-085636FB6996}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C15D9F44-E665-47AF-B08C-A467D32D8072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C15D9F44-E665-47AF-B08C-A467D32D8072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C15D9F44-E665-47AF-B08C-A467D32D8072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C15D9F44-E665-47AF-B08C-A467D32D8072}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
