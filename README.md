@@ -9,7 +9,7 @@ Attempt on porting C++ STL library to C#.
 Please notice some of the algorithm from STL are not ported to C#
 
 
-Most of your time using the library is in implementation InputIterator ( to get the data from) and the OutputIterator to output the data. Therefore you need to be familiar with the InputIterator type and OutputIterator type.
+Most of your time using the library is in implementation **InputIterator** ( to get the data from) and the **OutputIterator** (to output the data). Therefore you need to be familiar with the **InputIterator** type and **OutputIterator type**.
 
 There are only two namespace (**LibNavigate.Iterator** and **LibNavigate.Iterator.Extend**) you need to know in implementation.**LibNavigate.Iterator** contains the interface of the iterator and **LibNavigate.Iterator.Extend** contains the default implementation of iterator.
 
@@ -96,7 +96,7 @@ The best place to find documentation about STL is in https://en.cppreference.com
 
 **Differences** 
 
-There are some thing what is different from C++ STL.I have made the resource cleanup part explicit. In C++ it is your choice whether you put a destructor or not. In my port, I have add IDisposable interface which force you think about resource management (you can still ignore it if you want).
+There are some thing which is different from C++ STL.I have made the resource cleanup part explicit. In C++ it is your choice whether you put a destructor or not. In my port, I have add IDisposable interface which force you think about resource management (you can still ignore it if you want).
 
 Since there is no concept of moving (std::move) in C# , I have add an interface IRemoveable which implementation need to remove the current element in the iterator.
 
