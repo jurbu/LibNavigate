@@ -1,4 +1,7 @@
 # LibNavigate
+
+[![Build status](https://ci.appveyor.com/api/projects/status/5lee17p2njhdh9th/branch/master?svg=true)](https://ci.appveyor.com/project/SunMaungOo/libnavigate/branch/master)
+
 C# port of Standard Template Library (STL)
 
 Attempt on porting C++ STL library to C#.
