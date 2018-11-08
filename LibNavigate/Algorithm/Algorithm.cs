@@ -81,19 +81,7 @@ namespace LibNavigate.Algorithm
         public static int Count<T>(IInputIterator<T> inputIterator,
             T searchValue) where T:IEquatable<T>
         {
-            int count = 0;
-
-            while (!inputIterator.IsEnd())
-            {
-                if (inputIterator.Read().Equals(searchValue))
-                {
-                    ++count;
-                }
-
-                inputIterator.MoveNext();
-            }
-
-            return count;
+            return Count(inputIterator, searchValue, new Comparer<T>());
         }
 
         public static int Count<T>(IInputIterator<T> inputIterator, T searchValue,
@@ -155,20 +143,7 @@ namespace LibNavigate.Algorithm
         public static KeyValuePair<T,T> Mismatch<T>(IInputIterator<T> inputIterator1,
             IInputIterator<T> inputIterator2) where T : IEquatable<T>
         {
-            while (!(inputIterator1.IsEnd() || inputIterator2.IsEnd()))
-            {
-                if (!inputIterator1.Read().Equals(inputIterator2.Read()))
-                {
-                    break;
-                }
-
-                inputIterator1.MoveNext();
-
-                inputIterator2.MoveNext();
-            }
-
-            return new KeyValuePair<T, T>(inputIterator1.Read(), inputIterator2.Read());
-
+            return Mismatch(inputIterator1, inputIterator2, new Comparer<T>());
         }
 
         public static KeyValuePair<T, T> Mismatch<T>(IInputIterator<T> inputIterator1,
@@ -224,21 +199,8 @@ namespace LibNavigate.Algorithm
         /// <returns></returns>
         public static bool Equal<T>(IInputIterator<T> inputIterator1,
             IInputIterator<T> inputIterator2) where T : IEquatable<T>
-        {               
-            while (!(inputIterator1.IsEnd() || inputIterator2.IsEnd()))
-            {
-                if (!inputIterator1.Read().Equals(inputIterator2.Read()))
-                {
-                    return false;
-                }
-
-                inputIterator1.MoveNext();
-
-                inputIterator2.MoveNext();
-            }
-
-            return (inputIterator1.IsEnd() && inputIterator2.IsEnd());
-
+        {
+            return Equal(inputIterator1, inputIterator2, new Comparer<T>());               
         }
 
         public static bool Equal<T>(IInputIterator<T> inputIterator1,
@@ -271,17 +233,7 @@ namespace LibNavigate.Algorithm
         /// <returns></returns>
         public static IInputIterator<T> Find<T>(IInputIterator<T> inputIterator, T searchValue) where T : IEquatable<T>
         {
-            while (!inputIterator.IsEnd())
-            {
-                if (inputIterator.Read().Equals(searchValue))
-                {
-                    return inputIterator;
-                }
-
-                inputIterator.MoveNext();
-            }
-
-            return inputIterator;
+            return Find(inputIterator, searchValue, new Comparer<T>());
         }
 
         /// <summary>
@@ -368,69 +320,7 @@ namespace LibNavigate.Algorithm
         public static IInputIterator<T> FindEnd<T>(IInputIterator<T> inputIterator1,
             IInputIterator<T> inputIterator2) where T:IEquatable<T>
         {
-            
-            if(inputIterator2.IsEnd())
-            {
-                return inputIterator2;
-            }
-
-            //first set the result to the end of input iterator1
-
-            IInputIterator<T> result = GetShallowObject(inputIterator1) as IInputIterator<T>;
-            result.End();
-
-            IInputIterator<T> iterator2Begin = GetShallowObject(inputIterator2) as IInputIterator<T>;
-
-            //find the last index of the element in input iterator 2
-
-            int input2Index = (GetLength(iterator2Begin)-1);
-
-            iterator2Begin.Begin();
-
-            while (true)
-            {
-                //remember the current position of the input iterator 1
-                //before we put it into Search method, search method change
-                //the input iterator
-                IInputIterator<T> input1Clone = GetShallowObject(inputIterator1) as IInputIterator<T>;
-
-                IInputIterator<T> newResult=Search(inputIterator1, iterator2Begin);
-
-                //when the Search method result IsEnd() iterator , it mean 
-                //the element is not found
-                if(newResult.IsEnd())
-                {
-                    break;
-                }
-                else
-                {
-                    //get the last position of the input iterator1 
-                    //which doesn't have the element
-
-                    ICursor endRangeCursor = GetCursor(input1Clone);
-
-                    //caluclate the first element index of last range
-                    // Note : last element in the range index - input iterator 2 last index
-
-                    int position = Distance(input2Index, endRangeCursor);
-
-                    //get the result cursor in order to change the position
-
-                    ICursor resultCursor = GetCursor(result);
-
-                    //change the position to the first element of the last range
-
-                    resultCursor.SetPosition(position);
-
-                    //move the input iterator to next element
-
-                    inputIterator1.MoveNext();
-                }
-
-                iterator2Begin.Begin();
-            }
-
-            return result;
+            return FindEnd(inputIterator1, inputIterator2, new Comparer<T>());
         }
 
         public static IInputIterator<T> FindEnd<T>(IInputIterator<T> inputIterator1,
@@ -514,30 +404,7 @@ namespace LibNavigate.Algorithm
         public static bool FindFirstOf<T>(IInputIterator<T> inputIterator1,
             IInputIterator<T> inputIterator2,out T output) where T : IEquatable<T>
         {
-            output = default(T);
-
-            while(!inputIterator1.IsEnd())
-            {
-                while(!inputIterator2.IsEnd())
-                {
-                    T tmp = inputIterator1.Read();
-
-                    if(tmp.Equals(inputIterator2.Read()))
-                    {
-                        output = tmp;
-
-                        return true;
-                    }
-
-                    inputIterator2.MoveNext();
-                }
-
-                inputIterator2.Begin();
-
-                inputIterator1.MoveNext();
-            }
-
-            return false;
+            return FindFirstOf(inputIterator1, inputIterator2, out output, new Comparer<T>());
         }
 
         public static bool FindFirstOf<T>(IInputIterator<T> inputIterator1,
@@ -589,27 +456,7 @@ namespace LibNavigate.Algorithm
         /// <returns>Ajacent value or last value if there is no ajacent value</returns>
         public static T AdjacentFind<T>(IInputIterator<T> inputIterator) where T : IEquatable<T>
         {
-            T first = inputIterator.Read();
-
-            inputIterator.MoveNext();
-
-            T next=first;
-
-            while (!inputIterator.IsEnd())
-            {
-                next = inputIterator.Read();
-
-                if (first.Equals(next))
-                {
-                    return first;
-                }
-
-                first = next;
-
-                inputIterator.MoveNext();
-            }
-
-            return next;
+            return AdjacentFind(inputIterator, new Comparer<T>());
         }
 
         public static T AdjacentFind<T>(IInputIterator<T> inputIterator,IEqualityComparer<T> comparer)
@@ -665,6 +512,13 @@ namespace LibNavigate.Algorithm
         public static IInputIterator<T> Search<T>(IInputIterator<T> inputIterator1,
             IInputIterator<T> inputIterator2) where T : IEquatable<T>
         {
+            return Search(inputIterator1, inputIterator2, new Comparer<T>());
+        }
+
+        
+        public static IInputIterator<T> Search<T>(IInputIterator<T> inputIterator1,
+          IInputIterator<T> inputIterator2,IEqualityComparer<T> comparer)
+        {
             IInputIterator<T> result = inputIterator1;
 
             IInputIterator<T> input2Clone = GetShallowObject(inputIterator2) as IInputIterator<T>;
@@ -681,43 +535,7 @@ namespace LibNavigate.Algorithm
                 {
                     T compareData = input2Clone.Read();
 
-                    if (firstIter.Equals(compareData))
-                    {
-                        return inputIterator1;
-                    }
-
-                    input2Clone.MoveNext();
-
-                }
-
-                input2Clone = GetShallowObject(inputIterator2) as IInputIterator<T>;
-
-                inputIterator1.MoveNext();
-
-            }
-
-            return result;
-        }
-
-        
-        public static IInputIterator<T> Search<T>(IInputIterator<T> inputIterator1,
-          IInputIterator<T> inputIterator2,IEqualityComparer<T> comparer)
-        {
-            IInputIterator<T> result = inputIterator1;
-
-            IInputIterator<T> input2Clone = GetShallowObject(inputIterator2) as IInputIterator<T>;
-
-            while (!inputIterator1.IsEnd())
-            {
-                result = GetShallowObject(inputIterator1) as IInputIterator<T>;
-
-                T firstIter = inputIterator1.Read();
-
-                while (!input2Clone.IsEnd())
-                {
-                    T compareData = input2Clone.Read();
-
-                    if (comparer.Equals(firstIter, compareData))
+                    if (comparer.Equals(firstIter,compareData))
                     {
                         return inputIterator1;
                     }
@@ -750,30 +568,7 @@ namespace LibNavigate.Algorithm
         public static int SearchN<T>(IInputIterator<T> inputIterator, int count,
             T searchValue) where T : IEquatable<T>
         {
-            int currentIndex = 0;
-
-            while (!inputIterator.IsEnd())
-            {
-                int currentCount = currentIndex + 1;
-
-                //maximum length reach
-                if (currentCount == count)
-                {
-                    return -1;
-                }
-
-                if (inputIterator.Read().Equals(searchValue))
-                {
-                    return currentIndex;
-                }
-
-                ++currentIndex;
-
-                inputIterator.MoveNext();
-            }
-
-            //if we reach the end of the list we return -1
-            return -1;
+            return SearchN(inputIterator, count,searchValue,new Comparer<T>());
         }
 
         public static int SearchN<T>(IInputIterator<T> inputIterator, int count,
@@ -1167,18 +962,7 @@ namespace LibNavigate.Algorithm
         public static void Remove<T>(IInputIterator<T> inputIterator,
             T value) where T : IEquatable<T>
         {
-            IRemoveable removeable = GetRemoveable(inputIterator);
-
-            while (!inputIterator.IsEnd())
-            {
-                if(value.Equals(inputIterator.Read()))
-                {
-                    removeable.Remove();
-                }
-
-                inputIterator.MoveNext();
-            }
-
+            Remove(inputIterator, value, new Comparer<T>());
         }
 
         public static void Remove<T>(IInputIterator<T> inputIterator,
@@ -1231,17 +1015,7 @@ namespace LibNavigate.Algorithm
         public static void RemoveCopy<T>(IInputIterator<T> inputIterator,
             IOutputIterator<T> outputIterator,T value) where T : IEquatable<T>
         {
-            while(!inputIterator.IsEnd())
-            {
-                if(!value.Equals(inputIterator.Read()))
-                {
-                    outputIterator.Write(inputIterator.Read());
-                }
-
-                inputIterator.MoveNext();
-
-                outputIterator.MoveNext();
-            }
+            RemoveCopy(inputIterator, outputIterator, value, new Comparer<T>());
         }
 
         public static void RemoveCopy<T>(IInputIterator<T> inputIterator,
@@ -1295,15 +1069,7 @@ namespace LibNavigate.Algorithm
         public static void Replace<T>(IForwardIterator<T> inputIterator,
             T oldValue,T newValue) where T : IEquatable<T>
         {
-            while(!inputIterator.IsEnd())
-            {
-                if(oldValue.Equals(inputIterator.Read()))
-                {
-                    inputIterator.Write(newValue);
-                }
-
-                inputIterator.MoveNext();
-            }
+            Replace(inputIterator, oldValue, newValue, new Comparer<T>());
         }
 
         public static void Replace<T>(IForwardIterator<T> inputIterator,
@@ -1358,18 +1124,8 @@ namespace LibNavigate.Algorithm
             IOutputIterator<T> outputIterator,
             T oldValue, T newValue) where T : IEquatable<T>
         {
-            while(!inputIterator.IsEnd())
-            {
-                T currentValue = inputIterator.Read();
-
-                T outputValue = oldValue.Equals(currentValue) ? newValue : currentValue;
-
-                outputIterator.Write(outputValue);
-
-                inputIterator.MoveNext();
-
-                outputIterator.MoveNext();
-            }
+            ReplaceCopy(inputIterator, outputIterator, oldValue,
+                newValue, new Comparer<T>());
         }
 
         public static void ReplaceCopy<T>(IInputIterator<T> inputIterator,
@@ -1717,37 +1473,7 @@ namespace LibNavigate.Algorithm
         public static void Unique<T>(IForwardIterator<T> inputIterator) 
             where T : IEquatable<T>
         {
-            if(inputIterator.IsEnd())
-            {
-                return;
-            }
-
-            IRemoveable removeable = GetRemoveable(inputIterator);
-
-            using (IForwardIterator<T> cloneObj= GetPartialObject(inputIterator) as IForwardIterator<T>)
-            {
-                //in order to be +1 than the input iterator
-
-                cloneObj.MoveNext();
-
-                while(!(inputIterator.IsEnd() || cloneObj.IsEnd()))
-                {
-                    T currentValue = inputIterator.Read();
-
-                    T nextValue = cloneObj.Read();
-
-                    if(currentValue.Equals(nextValue))
-                    {
-                        //remove the current value
-
-                        removeable.Remove();
-                    }
-
-                    inputIterator.MoveNext();
-
-                    cloneObj.MoveNext();
-                }
-            }
+            Unique(inputIterator, new Comparer<T>());
         }
 
         public static void Unique<T>(IForwardIterator<T> inputIterator,IEqualityComparer<T> comparer)
@@ -1795,55 +1521,7 @@ namespace LibNavigate.Algorithm
         public static void UniqueCopy<T>(IForwardIterator<T> inputIterator,
             IOutputIterator<T> outputIterator) where T : IEquatable<T>
         {
-            if (inputIterator.IsEnd())
-            {
-                return;
-            }
-
-            using (IForwardIterator<T> cloneObj = GetPartialObject(inputIterator) as IForwardIterator<T>)
-            {
-                //in order to be +1 than the input iterator
-                cloneObj.MoveNext();
-
-                T currentValue = default(T);
-
-                T nextValue = default(T);
-
-                while (!(inputIterator.IsEnd() || cloneObj.IsEnd()))
-                {
-                    currentValue = inputIterator.Read();
-
-                    nextValue = cloneObj.Read();
-
-                    if (!currentValue.Equals(nextValue))
-                    {
-                        outputIterator.Write(currentValue);
-                    }
-
-                    inputIterator.MoveNext();
-
-                    cloneObj.MoveNext();
-
-                    outputIterator.MoveNext();
-                }
-         
-                //check whether there is still
-                //element in input iterator
-                if(!inputIterator.IsEnd())
-                {
-                    // last element and last-1 element are not same
-
-                    if(!currentValue.Equals(nextValue))
-                    {
-                        //now we write the last element
-
-                        outputIterator.Write(nextValue);
-                    }
-                }
-
-                
-
-            }
+            UniqueCopy(inputIterator, outputIterator, new Comparer<T>());
         }
 
         public static void UniqueCopy<T>(IForwardIterator<T> inputIterator,

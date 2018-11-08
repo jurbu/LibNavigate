@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm\Algorithm.cs" />
+    <Compile Include="Algorithm\Comparer.cs" />
     <Compile Include="Converter\IConverter.cs" />
     <Compile Include="Function\Function.cs" />
     <Compile Include="Iterator\Extend\BackInsertIterator.cs" />
